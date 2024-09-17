@@ -361,8 +361,7 @@ class MenuDrawer extends HTMLElement {
     );
     this.querySelectorAll(
       'button:not(.localization-selector):not(.country-selector__close-button):not(.country-filter__reset-button)'
-    ).forEach((button) => button.addEventListener('click', this.onCloseButtonClick.bind(this))
-    );
+    ).forEach((button) => button.addEventListener('click', this.onCloseButtonClick.bind(this)));
   }
 
   onKeyUp(event) {
@@ -767,9 +766,7 @@ class SlideshowComponent extends SliderComponent {
       this.autoplayButtonIsSetToPlay = true;
       this.play();
     } else {
-      this.reducedMotion.matches || this.announcementBarArrowButtonWasClicked
-        ? this.pause()
-        : this.play();
+      this.reducedMotion.matches || this.announcementBarArrowButtonWasClicked ? this.pause() : this.play();
     }
   }
 
@@ -833,10 +830,7 @@ class SlideshowComponent extends SliderComponent {
         event.target === this.sliderAutoplayButton || this.sliderAutoplayButton.contains(event.target);
       if (!this.autoplayButtonIsSetToPlay || focusedOnAutoplayButton) return;
       this.play();
-    } else if (
-      !this.reducedMotion.matches &&
-      !this.announcementBarArrowButtonWasClicked
-    ) {
+    } else if (!this.reducedMotion.matches && !this.announcementBarArrowButtonWasClicked) {
       this.play();
     }
   }
@@ -878,9 +872,7 @@ class SlideshowComponent extends SliderComponent {
 
   autoRotateSlides() {
     const slideScrollPosition =
-      this.currentPage === this.sliderItems.length
-        ? 0
-        : this.slider.scrollLeft + this.sliderItemOffset;
+      this.currentPage === this.sliderItems.length ? 0 : this.slider.scrollLeft + this.sliderItemOffset;
 
     this.setSlidePosition(slideScrollPosition);
     this.applyAnimationToAnnouncementBar();
@@ -944,7 +936,7 @@ class SlideshowComponent extends SliderComponent {
     const slideScrollPosition =
       this.slider.scrollLeft +
       this.sliderFirstItemNode.clientWidth *
-      (this.sliderControlLinksArray.indexOf(event.currentTarget) + 1 - this.currentPage);
+        (this.sliderControlLinksArray.indexOf(event.currentTarget) + 1 - this.currentPage);
     this.slider.scrollTo({
       left: slideScrollPosition,
     });
@@ -989,16 +981,25 @@ class VariantSelects extends HTMLElement {
         return Array.from(element.querySelectorAll('input')).find((radio) => radio.checked)?.value;
       }
     });
+
+    console.log('options', this.options);
   }
 
   updateMasterId() {
+    console.log('variantData', this.getVariantData());
+
+    // Find the variant that matches all options.
     this.currentVariant = this.getVariantData().find((variant) => {
-      return !variant.options
-        .map((option, index) => {
-          return this.options[index] === option;
-        })
-        .includes(false);
+      const matchedOptions = variant.options.map((option, index) => {
+        return this.options[index] === option;
+      });
+
+      console.log('matchedOptions', matchedOptions);
+
+      return !matchedOptions.includes(false);
     });
+
+    console.log('currentVariant', this.currentVariant);
   }
 
   updateSelectedSwatchValue({ target }) {
@@ -1026,14 +1027,44 @@ class VariantSelects extends HTMLElement {
     if (!this.currentVariant.featured_media) return;
 
     const mediaGalleries = document.querySelectorAll(`[id^="MediaGallery-${this.dataset.section}"]`);
-    mediaGalleries.forEach((mediaGallery) =>
-      mediaGallery.setActiveMedia(`${this.dataset.section}-${this.currentVariant.featured_media.id}`, true)
-    );
+    mediaGalleries.forEach((mediaGallery) => {
+      mediaGallery.setActiveMedia(`${this.dataset.section}-${this.currentVariant.featured_media.id}`, true);
+      this.updateMediaGrouping(mediaGallery);
+    });
 
     const modalContent = document.querySelector(`#ProductModal-${this.dataset.section} .product-media-modal__content`);
     if (!modalContent) return;
     const newMediaModal = modalContent.querySelector(`[data-media-id="${this.currentVariant.featured_media.id}"]`);
     modalContent.prepend(newMediaModal);
+  }
+
+  updateMediaGrouping(mediaGallery) {
+    if (!mediaGallery) {
+      return;
+    }
+    const mediaGalleryId = mediaGallery.id;
+    const groupVariants = mediaGallery.getAttribute('data-group-variants');
+    const hasOnlyDefaultVariant = mediaGallery.getAttribute('data-has-only-default-variant');
+    const disableImageGrouping = mediaGallery.getAttribute('data-disable-image-grouping');
+    if (groupVariants == 'false' || hasOnlyDefaultVariant === 'true' || disableImageGrouping === 'true') {
+      return;
+    }
+    const selectedVariantId = this.currentVariant.id;
+    const featuredMedia = document.querySelector('.product__media-item.is-active');
+    const featuredVariantGrouping = featuredMedia ? featuredMedia.getAttribute('data-variant-grouping') : null;
+
+    document
+      .querySelectorAll(
+        `#${mediaGalleryId} .product__media-item, #${mediaGalleryId} .thumbnail-list__item, .product-media-modal__content .product-modal-image`
+      )
+      .forEach((mediaItem) => {
+        const mediaVariantGrouping = mediaItem.getAttribute('data-variant-grouping');
+        if (mediaVariantGrouping !== featuredVariantGrouping || mediaVariantGrouping === '') {
+          mediaItem.classList.add('hide-image');
+        } else {
+          mediaItem.classList.remove('hide-image');
+        }
+      });
   }
 
   updateURL() {
@@ -1114,7 +1145,8 @@ class VariantSelects extends HTMLElement {
     const sectionId = this.dataset.originalSection ? this.dataset.originalSection : this.dataset.section;
 
     fetch(
-      `${this.dataset.url}?variant=${requestedVariantId}&section_id=${this.dataset.originalSection ? this.dataset.originalSection : this.dataset.section
+      `${this.dataset.url}?variant=${requestedVariantId}&section_id=${
+        this.dataset.originalSection ? this.dataset.originalSection : this.dataset.section
       }`
     )
       .then((response) => response.text())
@@ -1141,7 +1173,9 @@ class VariantSelects extends HTMLElement {
         );
 
         const pricePerItemDestination = document.getElementById(`Price-Per-Item-${this.dataset.section}`);
-        const pricePerItemSource = html.getElementById(`Price-Per-Item-${this.dataset.originalSection ? this.dataset.originalSection : this.dataset.section}`);
+        const pricePerItemSource = html.getElementById(
+          `Price-Per-Item-${this.dataset.originalSection ? this.dataset.originalSection : this.dataset.section}`
+        );
 
         const volumePricingDestination = document.getElementById(`Volume-${this.dataset.section}`);
         const qtyRules = document.getElementById(`Quantity-Rules-${this.dataset.section}`);
@@ -1171,8 +1205,7 @@ class VariantSelects extends HTMLElement {
 
         if (price) price.classList.remove('hidden');
 
-        if (inventoryDestination)
-          inventoryDestination.classList.toggle('hidden', inventorySource.innerText === '');
+        if (inventoryDestination) inventoryDestination.classList.toggle('hidden', inventorySource.innerText === '');
 
         const addButtonUpdated = html.getElementById(`ProductSubmitButton-${sectionId}`);
         this.toggleAddButton(
