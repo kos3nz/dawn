@@ -1,8 +1,8 @@
 function getFocusableElements(container) {
   return Array.from(
     container.querySelectorAll(
-      "summary, a[href], button:enabled, [tabindex]:not([tabindex^='-']), [draggable], area, input:not([type=hidden]):enabled, select:enabled, textarea:enabled, object, iframe"
-    )
+      "summary, a[href], button:enabled, [tabindex]:not([tabindex^='-']), [draggable], area, input:not([type=hidden]):enabled, select:enabled, textarea:enabled, object, iframe",
+    ),
   );
 }
 
@@ -115,7 +115,7 @@ function focusVisiblePolyfill() {
       currentFocusedElement = document.activeElement;
       currentFocusedElement.classList.add('focused');
     },
-    true
+    true,
   );
 }
 
@@ -159,7 +159,7 @@ class QuantityInput extends HTMLElement {
     this.changeEvent = new Event('change', { bubbles: true });
     this.input.addEventListener('change', this.onInputChange.bind(this));
     this.querySelectorAll('button').forEach((button) =>
-      button.addEventListener('click', this.onButtonClick.bind(this))
+      button.addEventListener('click', this.onButtonClick.bind(this)),
     );
   }
 
@@ -369,10 +369,10 @@ class MenuDrawer extends HTMLElement {
 
   bindEvents() {
     this.querySelectorAll('summary').forEach((summary) =>
-      summary.addEventListener('click', this.onSummaryClick.bind(this))
+      summary.addEventListener('click', this.onSummaryClick.bind(this)),
     );
     this.querySelectorAll(
-      'button:not(.localization-selector):not(.country-selector__close-button):not(.country-filter__reset-button)'
+      'button:not(.localization-selector):not(.country-selector__close-button):not(.country-filter__reset-button)',
     ).forEach((button) => button.addEventListener('click', this.onCloseButtonClick.bind(this)));
   }
 
@@ -503,7 +503,7 @@ class HeaderDrawer extends MenuDrawer {
       this.borderOffset || this.closest('.header-wrapper').classList.contains('header-wrapper--border-bottom') ? 1 : 0;
     document.documentElement.style.setProperty(
       '--header-bottom-position',
-      `${parseInt(this.header.getBoundingClientRect().bottom - this.borderOffset)}px`
+      `${parseInt(this.header.getBoundingClientRect().bottom - this.borderOffset)}px`,
     );
     this.header.classList.add('menu-open');
 
@@ -528,7 +528,7 @@ class HeaderDrawer extends MenuDrawer {
     this.header &&
       document.documentElement.style.setProperty(
         '--header-bottom-position',
-        `${parseInt(this.header.getBoundingClientRect().bottom - this.borderOffset)}px`
+        `${parseInt(this.header.getBoundingClientRect().bottom - this.borderOffset)}px`,
       );
     document.documentElement.style.setProperty('--viewport-height', `${window.innerHeight}px`);
   };
@@ -649,7 +649,7 @@ class SliderComponent extends HTMLElement {
     if (this.sliderItemsToShow.length < 2) return;
     this.sliderItemOffset = this.sliderItemsToShow[1].offsetLeft - this.sliderItemsToShow[0].offsetLeft;
     this.slidesPerPage = Math.floor(
-      (this.slider.clientWidth - this.sliderItemsToShow[0].offsetLeft) / this.sliderItemOffset
+      (this.slider.clientWidth - this.sliderItemsToShow[0].offsetLeft) / this.sliderItemOffset,
     );
     this.totalPages = this.sliderItemsToShow.length - this.slidesPerPage + 1;
     this.update();
@@ -680,7 +680,7 @@ class SliderComponent extends HTMLElement {
             currentPage: this.currentPage,
             currentElement: this.sliderItemsToShow[this.currentPage - 1],
           },
-        })
+        }),
       );
     }
 
@@ -757,7 +757,7 @@ class SlideshowComponent extends SliderComponent {
           () => {
             this.announcementBarArrowButtonWasClicked = true;
           },
-          { once: true }
+          { once: true },
         );
       });
     }
@@ -1021,7 +1021,7 @@ class VariantSelects extends HTMLElement {
 
       selectedDropdownSwatchValue.style.setProperty(
         '--swatch-focal-point',
-        target.selectedOptions[0].dataset.optionSwatchFocalPoint || 'unset'
+        target.selectedOptions[0].dataset.optionSwatchFocalPoint || 'unset',
       );
     } else if (tagName === 'INPUT' && target.type === 'radio') {
       const selectedSwatchValue = this.querySelector(`[data-selected-swatch-value="${name}"]`);
@@ -1042,7 +1042,7 @@ class VariantSelects extends HTMLElement {
 
   updateVariantInput() {
     const productForms = document.querySelectorAll(
-      `#product-form-${this.dataset.section}, #product-form-installment-${this.dataset.section}`
+      `#product-form-${this.dataset.section}, #product-form-installment-${this.dataset.section}`,
     );
     productForms.forEach((productForm) => {
       const input = productForm.querySelector('input[name="id"]');
@@ -1053,7 +1053,7 @@ class VariantSelects extends HTMLElement {
 
   updateVariantStatuses() {
     const selectedOptionOneVariants = this.variantData.filter(
-      (variant) => this.querySelector(':checked').value === variant.option1
+      (variant) => this.querySelector(':checked').value === variant.option1,
     );
     const inputWrappers = [...this.querySelectorAll('.product-form__input')];
     inputWrappers.forEach((option, index) => {
@@ -1145,7 +1145,7 @@ class VariantSelects extends HTMLElement {
         if (sourceData && sourceData.index !== destinationIndex) {
           mediaGallerySource.insertBefore(
             sourceData.item,
-            mediaGallerySource.querySelector(`li:nth-of-type(${destinationIndex + 1})`)
+            mediaGallerySource.querySelector(`li:nth-of-type(${destinationIndex + 1})`),
           );
 
           // refresh source now that it has been modified
@@ -1173,7 +1173,7 @@ class VariantSelects extends HTMLElement {
     fetch(
       `${this.dataset.url}?variant=${requestedVariantId}&section_id=${
         this.dataset.originalSection ? this.dataset.originalSection : this.dataset.section
-      }`
+      }`,
     )
       .then((response) => response.text())
       .then((responseText) => {
@@ -1183,26 +1183,31 @@ class VariantSelects extends HTMLElement {
         const html = new DOMParser().parseFromString(responseText, 'text/html');
         const destination = document.getElementById(`price-${this.dataset.section}`);
         const source = html.getElementById(
-          `price-${this.dataset.originalSection ? this.dataset.originalSection : this.dataset.section}`
+          `price-${this.dataset.originalSection ? this.dataset.originalSection : this.dataset.section}`,
         );
         const skuSource = html.getElementById(
-          `Sku-${this.dataset.originalSection ? this.dataset.originalSection : this.dataset.section}`
+          `Sku-${this.dataset.originalSection ? this.dataset.originalSection : this.dataset.section}`,
         );
         const skuDestination = document.getElementById(`Sku-${this.dataset.section}`);
         const inventorySource = html.getElementById(
-          `Inventory-${this.dataset.originalSection ? this.dataset.originalSection : this.dataset.section}`
+          `Inventory-${this.dataset.originalSection ? this.dataset.originalSection : this.dataset.section}`,
         );
         const inventoryDestination = document.getElementById(`Inventory-${this.dataset.section}`);
 
         const volumePricingSource = html.getElementById(
-          `Volume-${this.dataset.originalSection ? this.dataset.originalSection : this.dataset.section}`
+          `Volume-${this.dataset.originalSection ? this.dataset.originalSection : this.dataset.section}`,
         );
 
         this.updateMedia(html);
 
+        const mediaGallery = document.querySelector(`[id^="MediaGallery-${this.dataset.section}"]`);
+        if (mediaGallery) {
+          this.updateMediaGrouping(mediaGallery);
+        }
+
         const pricePerItemDestination = document.getElementById(`Price-Per-Item-${this.dataset.section}`);
         const pricePerItemSource = html.getElementById(
-          `Price-Per-Item-${this.dataset.originalSection ? this.dataset.originalSection : this.dataset.section}`
+          `Price-Per-Item-${this.dataset.originalSection ? this.dataset.originalSection : this.dataset.section}`,
         );
 
         const volumePricingDestination = document.getElementById(`Volume-${this.dataset.section}`);
@@ -1238,7 +1243,7 @@ class VariantSelects extends HTMLElement {
         const addButtonUpdated = html.getElementById(`ProductSubmitButton-${sectionId}`);
         this.toggleAddButton(
           addButtonUpdated ? addButtonUpdated.hasAttribute('disabled') : true,
-          window.variantStrings.soldOut
+          window.variantStrings.soldOut,
         );
 
         publish(PUB_SUB_EVENTS.variantChange, {
@@ -1248,6 +1253,35 @@ class VariantSelects extends HTMLElement {
             variant: this.currentVariant,
           },
         });
+      });
+  }
+
+  updateMediaGrouping(mediaGallery) {
+    if (!mediaGallery) {
+      return;
+    }
+    const mediaGalleryId = mediaGallery.id;
+    const groupVariants = mediaGallery.getAttribute('data-group-variants');
+    const hasOnlyDefaultVariant = mediaGallery.getAttribute('data-has-only-default-variant');
+    const disableImageGrouping = mediaGallery.getAttribute('data-disable-image-grouping');
+    if (groupVariants == 'false' || hasOnlyDefaultVariant === 'true' || disableImageGrouping === 'true') {
+      return;
+    }
+    const selectedVariantId = this.currentVariant.id;
+    const featuredMedia = document.querySelector('.product__media-item.is-active');
+    const featuredVariantGrouping = featuredMedia ? featuredMedia.getAttribute('data-variant-grouping') : null;
+
+    document
+      .querySelectorAll(
+        `#${mediaGalleryId} .product__media-item, #${mediaGalleryId} .thumbnail-list__item, .product-media-modal__content .product-modal-image`,
+      )
+      .forEach((mediaItem) => {
+        const mediaVariantGrouping = mediaItem.getAttribute('data-variant-grouping');
+        if (mediaVariantGrouping !== featuredVariantGrouping || mediaVariantGrouping === '') {
+          mediaItem.classList.add('hide-image');
+        } else {
+          mediaItem.classList.remove('hide-image');
+        }
       });
   }
 
