@@ -193,7 +193,7 @@ fieldset.product-form__input .form__label {
   width: 1px;
 }
 
-.product-form__input input[type='radio'] + label {
+.product-form__input input[type='radio'] + label:not(.option-swatch) {
   border: var(--variant-pills-border-width) solid rgba(var(--color-foreground), var(--variant-pills-border-opacity));
   background-color: rgb(var(--color-background));
   color: rgba(var(--color-foreground));
@@ -209,6 +209,44 @@ fieldset.product-form__input .form__label {
   transition: border var(--duration-short) ease;
   cursor: pointer;
   position: relative;
+}
+
+.product-form__input input[type='radio'] + label.option-swatch {
+  height: 30px;
+  width: 30px;
+  margin: 0.7rem 1rem 0.2rem 0;
+  border-radius: 30px;
+  overflow: hidden;
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+}
+
+.product-form__input input[type='radio'] + label.option-swatch .option-swatch-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  object-fit: cover;
+  height: 100%;
+  width: 100%;
+  display: block;
+}
+
+.product-form__input input[type='radio']:checked + label.option-swatch {
+  outline: 1px solid black;
+  outline-offset: 2px;
+}
+
+.product-form__input input[type='radio'].disabled + label.option-swatch::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(135deg);
+  height: 100%;
+  width: 2px;
+  background-color: gray;
 }
 
 .product-form__input input[type='radio'] + label:before {
