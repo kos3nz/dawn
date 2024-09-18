@@ -262,6 +262,44 @@
                             {%- endif -%}
                           </div>
                         </td>
+
+                        {%- liquid
+                          if settings.use_quantity_rules
+                            if item.product.metafields.custom.quantity_rule_type_override == 'Product Rules'
+                              assign quantity_rule_type = 'product_rule'
+                            elsif item.product.metafields.custom.quantity_rule_type_override == 'Variant Rules'
+                              assign quantity_rule_type = 'variant_rule'
+                            elsif settings.qty_rule_type == 'product_rule'
+                              assign quantity_rule_type = 'product_rule'
+                            elsif settings.qty_rule_type == 'variant_rule'
+                              assign quantity_rule_type = 'variant_rule'
+                            endif
+
+                            if quantity_rule_type == 'product_rule'
+                              assign quantity_rule = item.product.metafields.custom.quantity_rule.value
+                              assign total_product_quantity = 0
+                              assign global_max = item.product.metafields.custom.quantity_rule.value.max | plus: 0
+                              for cart_item in cart.items
+                                if cart_item.product.id == item.product.id
+                                  assign total_product_quantity = total_product_quantity | plus: cart_item.quantity
+                                endif
+                              endfor
+                              assign item_remaining_qty = global_max | minus: total_product_quantity
+                              assign max_for_variant = item.quantity | plus: item_remaining_qty
+                              if max_for_variant > global_max
+                                assign max_for_variant = global_max
+                              endif
+                            elsif quantity_rule_type == 'variant_rule'
+                              assign quantity_rule = item.variant.metafields.custom.quantity_rule.value
+                            endif
+                            if quantity_rule == null
+                              assign quantity_rule = item.variant.quantity_rule
+                            endif
+                          else
+                            assign quantity_rule = item.variant.quantity_rule
+                          endif
+                        -%}
+
                         {%- liquid
                           assign has_qty_rules = false
                           if item.variant.quantity_rule.increment > 1 or item.variant.quantity_rule.min > 1 or item.variant.quantity_rule.max != null
@@ -304,9 +342,15 @@
                                     data-cart-quantity="{{ cart | item_count_for_variant: item.variant.id }}"
                                     min="0"
                                     data-min="{{ item.variant.quantity_rule.min }}"
-                                    {% if item.variant.quantity_rule.max != null %}
-                                      max="{{ item.variant.quantity_rule.max }}"
+
+                                    {% if quantity_rule.max != null %}
+                                      {% if quantity_rule_type == 'product_rule' %}
+                                        max="{{ max_for_variant }}"
+                                      {% else %}
+                                        max="{{ quantity_rule.max }}"
+                                      {% endif %}
                                     {% endif %}
+
                                     step="{{ item.variant.quantity_rule.increment }}"
                                     {% # theme-check-enable %}
                                     aria-label="{{ 'products.product.quantity.input_label' | t: product: item.product.title | escape }}"

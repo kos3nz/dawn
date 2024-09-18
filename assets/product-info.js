@@ -192,7 +192,8 @@ if (!customElements.get('product-info')) {
           updateSourceFromDestination('Volume');
           updateSourceFromDestination('Price-Per-Item', ({ classList }) => classList.contains('hidden'));
 
-          this.updateQuantityRules(this.sectionId, html);
+          this.updateQuantitySelector(html);
+          // this.updateQuantityRules(this.sectionId, html);
           this.querySelector(`#Quantity-Rules-${this.dataset.section}`)?.classList.remove('hidden');
           this.querySelector(`#Volume-Note-${this.dataset.section}`)?.classList.remove('hidden');
 
@@ -348,6 +349,24 @@ if (!customElements.get('product-info')) {
           })
           .catch((e) => console.error(e))
           .finally(() => this.querySelector('.quantity__rules-cart .loading__spinner').classList.add('hidden'));
+      }
+
+      updateQuantitySelector(html) {
+        const newQuantitySelectorContainer = html.querySelector(`#Quantity-Form-${this.sectionId}`);
+        const currentQuantitySelectorContainer = document.querySelector('#Quantity-Form-' + this.dataset.section);
+
+        if (newQuantitySelectorContainer && currentQuantitySelectorContainer) {
+          const newContent = newQuantitySelectorContainer.innerHTML.trim();
+
+          if (newContent === '') {
+            return;
+          }
+
+          currentQuantitySelectorContainer.innerHTML = newContent;
+
+          this.quantityInput = currentQuantitySelectorContainer.querySelector('.quantity__input');
+          this.initQuantityHandlers();
+        }
       }
 
       updateQuantityRules(sectionId, html) {

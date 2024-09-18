@@ -1465,5 +1465,36 @@
         "default": "scheme-1"
       }
     ]
+  },
+
+  /* -------------------------- Custom Quantity Rules ------------------------- */
+  {
+    "name": "Custom Quantity Rules",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "use_quantity_rules",
+        "label": "Enable custom quantity rules",
+        "default": false
+      },
+      {
+        "type": "select",
+        "id": "qty_rule_type",
+        "options": [
+          {
+            "value": "product_rule",
+            "label": "Product Rules"
+          },
+          {
+            "value": "variant_rule",
+            "label": "Variant Rules"
+          }
+        ],
+        "label": "Quantity Rule Type",
+        "info": "Specify whether quantity rules are applied at the product level or variant level",
+        "default": "variant_rule"
+      }
+    ]
   }
+
 ]

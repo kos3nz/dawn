@@ -53,7 +53,7 @@ if (!customElements.get('quantity-popover')) {
 
           button.classList.toggle('quantity-popover__info-button--open');
 
-          this.infoButtonDesktop.classList.add('quantity-popover__info-button--icon-only--animation');
+          button.classList.add('quantity-popover__info-button--icon-only--animation');
         }
 
         const isOpen = button.getAttribute('aria-expanded') === 'true';
@@ -70,16 +70,17 @@ if (!customElements.get('quantity-popover')) {
 
       closePopover(event) {
         event.preventDefault();
-        const isButtonChild = this.infoButtonDesktop.contains(event.relatedTarget);
-        const isPopoverChild = this.popoverInfo.contains(event.relatedTarget);
 
         const button = this.infoButtonDesktop && this.mql.matches ? this.infoButtonDesktop : this.infoButtonMobile;
+
+        const isButtonChild = button.contains(event.relatedTarget);
+        const isPopoverChild = this.popoverInfo.contains(event.relatedTarget);
 
         if (!isButtonChild && !isPopoverChild) {
           button.setAttribute('aria-expanded', 'false');
           button.classList.remove('quantity-popover__info-button--open');
           this.popoverInfo.setAttribute('hidden', '');
-          this.infoButtonDesktop.classList.remove('quantity-popover__info-button--icon-only--animation');
+          button.classList.remove('quantity-popover__info-button--icon-only--animation');
         }
 
         this.eventMouseEnterHappened = false;
