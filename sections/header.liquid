@@ -496,6 +496,114 @@
       "label": "t:sections.header.settings.menu_type_desktop.label",
       "info": "t:sections.header.settings.menu_type_desktop.info"
     },
+
+    {
+      "type": "select",
+      "id": "mega_menu_images_toggle",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "featured",
+          "label": "Featured"
+        },
+        {
+          "value": "metafield",
+          "label": "Metafield"
+        }
+      ],
+      "default": "none",
+      "label": "Mega menu collection image type"
+    },
+    {
+      "type": "checkbox",
+      "id": "mega_menu_images_title",
+      "label": "Hide the collection title (when mega menu images is active)",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "megamenu_backdrop_toggle",
+      "label": "Add a backdrop to darken rest of page when megamenu is open",
+      "default": true
+    },
+
+    {
+      "type": "select",
+      "id": "dropdown_menu_images_toggle",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "featured",
+          "label": "Featured"
+        },
+        {
+          "value": "metafield",
+          "label": "Metafield"
+        }
+      ],
+      "default": "none",
+      "label": "Dropdown menu collection image type"
+    },
+    {
+      "type": "range",
+      "id": "menu_dropdown_width",
+      "label": "Dropdown Menu Width",
+      "default": 25,
+      "min": 20,
+      "max": 40,
+      "step": 1
+    },
+    {
+      "type": "select",
+      "id": "drawer_menu_images_toggle",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "featured",
+          "label": "Featured"
+        },
+        {
+          "value": "metafield",
+          "label": "Metafield"
+        }
+      ],
+      "default": "none",
+      "label": "Drawer menu collection image type"
+    },
+    {
+      "type": "range",
+      "id": "menu_images_size",
+      "label": "Menu Image Size",
+      "info": "Applies to drawer and dropdown menu",
+      "default": 60,
+      "min": 50,
+      "max": 100,
+      "step": 1,
+      "unit": "px"
+    },
+    {
+      "type": "checkbox",
+      "id": "menu_images_border_toggle",
+      "label": "Enable Menu Border",
+      "info": "Use with Dropdown and Drawer menu with images",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "menu_images_border_color",
+      "label": "Menu Images Border Color",
+      "default": "#eaeaea"
+    },
+
     {
       "type": "select",
       "id": "sticky_header_type",

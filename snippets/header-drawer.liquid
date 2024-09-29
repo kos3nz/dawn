@@ -30,6 +30,15 @@
                         class="menu-drawer__menu-item list-menu__item link link--text focus-inset{% if link.child_active %} menu-drawer__menu-item--active{% endif %}"
                       >
                         {{ link.title | escape }}
+
+{% render 'menu-image-custom', 
+  link:link,
+  menu_images_toggle: section.settings.drawer_menu_images_toggle,
+  menu_images_size: section.settings.menu_images_size,
+  menu_images_border_toggle: section.settings.menu_images_border_toggle,
+  menu_images_border_color: section.settings.menu_images_border_color
+%}
+
                         <span class="svg-wrapper">
                           {{- 'icon-arrow.svg' | inline_asset_content -}}
                         </span>
@@ -62,6 +71,15 @@
                                     {% endif %}
                                   >
                                     {{ childlink.title | escape }}
+
+{% render 'menu-image-custom', 
+  link:childlink,
+  menu_images_toggle: section.settings.drawer_menu_images_toggle,
+  menu_images_size: section.settings.menu_images_size,
+  menu_images_border_toggle: section.settings.menu_images_border_toggle,
+  menu_images_border_color: section.settings.menu_images_border_color
+%}
+
                                   </a>
                                 {%- else -%}
                                   <details id="Details-menu-drawer-{{ link.handle }}-{{ childlink.handle }}">
@@ -70,6 +88,15 @@
                                       class="menu-drawer__menu-item link link--text list-menu__item focus-inset"
                                     >
                                       {{ childlink.title | escape }}
+
+{% render 'menu-image-custom', 
+  link:childlink,
+  menu_images_toggle: section.settings.drawer_menu_images_toggle,
+  menu_images_size: section.settings.menu_images_size,
+  menu_images_border_toggle: section.settings.menu_images_border_toggle,
+  menu_images_border_color: section.settings.menu_images_border_color
+%}
+
                                       <span class="svg-wrapper">
                                         {{- 'icon-arrow.svg' | inline_asset_content -}}
                                       </span>
@@ -106,6 +133,15 @@
                                               {% endif %}
                                             >
                                               {{ grandchildlink.title | escape }}
+
+{% render 'menu-image-custom', 
+  link:grandchildlink,
+  menu_images_toggle: section.settings.drawer_menu_images_toggle,
+  menu_images_size: section.settings.menu_images_size,
+  menu_images_border_toggle: section.settings.menu_images_border_toggle,
+  menu_images_border_color: section.settings.menu_images_border_color
+%}
+
                                             </a>
                                           </li>
                                         {%- endfor -%}
@@ -129,6 +165,16 @@
                       {% endif %}
                     >
                       {{ link.title | escape }}
+
+
+{% render 'menu-image-custom', 
+  link:link,
+  menu_images_toggle: section.settings.drawer_menu_images_toggle,
+  menu_images_size: section.settings.menu_images_size,
+  menu_images_border_toggle: section.settings.menu_images_border_toggle,
+  menu_images_border_color: section.settings.menu_images_border_color
+%}
+
                     </a>
                   {%- endif -%}
                 </li>
