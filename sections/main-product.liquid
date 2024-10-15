@@ -463,6 +463,8 @@
 
               {%- when 'variant_picker' -%}
                 {% render 'product-variant-picker', product: product, block: block, product_form_id: product_form_id %}
+              {%- when 'product_grouping_picker' -%}   
+                {% render 'product-grouping-picker-custom', product: product, block: block %}
               {%- when 'buy_buttons' -%}
                 {%- render 'buy-buttons',
                   block: block,
@@ -891,6 +893,97 @@
             }
           ],
           "default": "circle"
+        }
+      ]
+    },
+    {
+      "type": "product_grouping_picker",
+      "name": "Product Grouping Picker",
+      "limit": 3,
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "default": "Product Grouping Picker",
+          "label": "Product Grouping Picker Option"
+        },
+        {
+          "type": "select",
+          "id": "picker_type",
+          "options": [
+            {
+              "value": "dropdown",
+              "label": "t:sections.main-product.blocks.variant_picker.settings.picker_type.options__1.label"
+            },
+            {
+              "value": "button",
+              "label": "t:sections.main-product.blocks.variant_picker.settings.picker_type.options__2.label"
+            }
+          ],
+          "default": "button",
+          "label": "t:sections.main-product.blocks.variant_picker.settings.picker_type.label"
+        },
+        {
+          "type": "text",
+          "id": "grouping_label",
+          "default": "Grouping 1",
+          "label": "Product Grouping Label"
+        },
+        {
+          "type": "text",
+          "id": "option_type_metafield_key",
+          "label": "Option Metafield Key",
+          "info": "Used for the grouping option",
+          "default": "product_grouping_option_1"
+        },
+        {
+          "type": "text",
+          "id": "option_value_metafield_key",
+          "label": "Option Value Metafield Key",
+          "info": "Used for the grouping option value text",
+          "default": "product_grouping_option_1_value"
+        },
+        {
+          "type": "header",
+          "content": "Custom Swatch"
+        },
+        {
+          "id": "combined_listing_swatch_shape_custom",
+          "label": "Swatch (custom)",
+          "type": "select",
+          "info": "Variant picker style must be Pills to use the custom swatches", 
+          "options": [
+            {
+              "value": "circle",
+              "label": "t:sections.main-product.blocks.variant_picker.settings.swatch_shape.options__1.label"
+            },
+            {
+              "value": "square",
+              "label": "t:sections.main-product.blocks.variant_picker.settings.swatch_shape.options__2.label"
+            },
+            {
+              "value": "none",
+              "label": "t:sections.main-product.blocks.variant_picker.settings.swatch_shape.options__3.label"
+            }
+          ],
+          "default": "none"
+        },
+        {
+          "type": "text",
+          "id": "combined_listing_variant_swatch_metaobject",
+          "label": "Default Variant Swatch Map Metaobject",
+          "default": "variant-swatch-mapping",
+          "info": "Can be overridden with product metafield"
+        },
+        {
+          "type": "range",
+          "id": "combined_listing_swatch_size",
+          "min": 30,
+          "max": 60,
+          "step": 1,
+          "unit": "px",
+          "label": "Swatch Size",
+          "default": 40
         }
       ]
     },

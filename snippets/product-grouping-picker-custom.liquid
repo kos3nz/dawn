@@ -1,0 +1,141 @@
+{%- if product.metafields.custom[block.settings.option_type_metafield_key] -%} 
+  
+  {% if product.has_only_default_variant %}
+    {{ 'component-product-variant-swatch-custom.css' | asset_url | stylesheet_tag }}
+    {{ 'component-product-variant-picker.css' | asset_url | stylesheet_tag }}
+  {% endif %}
+
+  
+  {% assign related_products_metaobject = product.metafields.custom[block.settings.option_type_metafield_key].value %}
+  {% assign related_products = related_products_metaobject.product_grouping.value %}
+
+  {% if product.metafields.custom.variant_swatch_map_override.value %}
+    {% assign target_entry = product.metafields.custom.variant_swatch_map_override.value %}
+  {% else %}  
+    {% assign entry_title = block.settings.combined_listing_variant_swatch_metaobject %} 
+    {% assign target_entry = nil %}
+    {% for entry in shop.metaobjects.variant_swatch_map.values %}
+      {% if entry.title == entry_title %}
+        {% assign target_entry = entry %}
+        {% break %}
+      {% endif %}
+    {% endfor %}
+  {% endif %}
+      
+  {% if target_entry %}
+    {% assign variant_images_data = target_entry.variant_images_json %}
+  {% else %}
+    {% assign variant_images_data = nil %}
+  {% endif %}
+
+  {%- if block.settings.picker_type == 'button' -%}
+
+    {% if block.settings.use_swatch_custom == false %}
+      
+      <fieldset class="js product-form__input product-form__input--pill">
+        <legend class="form__label">{{ block.settings.grouping_label }}</legend>
+        {% for related_product in related_products %}
+          <input
+            type="radio"
+            id="related_product-{{ related_product.id }}-{{ block.id }}"
+            name="related_product_{{ block.id }}"
+            value="{{ related_product.url }}"
+            onchange="window.location.href=this.value;"
+            {% if product.handle == related_product.handle %}
+              checked="checked"
+            {% endif %}
+          >
+          <label for="related_product-{{ related_product.id }}-{{ block.id }}">{{ related_product.metafields.custom[block.settings.option_value_metafield_key].value }}</label>
+        {% endfor %}
+      </fieldset>
+  
+    {% else %}
+      
+      {% assign variant_options_images = variant_images_data.value | where: "variant_name", block.settings.grouping_label %}
+      <fieldset class="js product-form__input product-form__input--pill">
+        {% assign base_store_files_url = '//' | append: shop.permanent_domain | append: '/cdn/shop/files/' %}
+        {% for related_product in related_products %}
+          {% if product.handle == related_product.handle %}
+            <legend class="form__label">
+              {{ block.settings.grouping_label }}:
+              <span id="selected{{ block.settings.grouping_label }}">{{ related_product.metafields.custom[block.settings.option_value_metafield_key].value }}</span>
+            </legend>
+          {% endif %}
+          {% assign variant_image_url = nil %}
+          {% assign option_disabled = true %}
+          {% if related_product.available %}
+            {% assign option_disabled = false %}
+          {% endif %}
+          {% assign swatch_found = false %}
+          {% for item in variant_options_images %}
+            {% if item.variant_value == related_product.metafields.custom[block.settings.option_value_metafield_key].value %}
+               {% if item.variant_swatch != blank %}
+                {% assign variant_image_url = base_store_files_url | append: item.variant_swatch %}
+                {% assign swatch_found = true %}
+              {% elsif item.variant_hex %}
+                {% assign hex_color = item.variant_hex | replace: '#', '%23' %}
+                {% assign svg = '<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40"><rect width="100%" height="100%" fill="' | append: hex_color | append: '" /></svg>' %}
+                {% assign encoded_svg = svg | replace: '"', '%22' | replace: '<', '%3C' | replace: '>', '%3E' %}
+                {% assign variant_image_url = 'data:image/svg+xml;charset=utf-8,' | append: encoded_svg %}
+                {% assign swatch_found = true %}
+              {% endif %}
+              {% if swatch_found %}
+                {% break %}
+              {% endif %}
+            {% endif %}
+          {% endfor %}
+          {% unless swatch_found %}
+            {% assign variant_image_url = related_product.featured_image.src | img_url: '100x100' %}
+          {% endunless %}
+           <div class="product-form__swatch"> 
+              <input
+                type="radio"
+                id="related_product-{{ related_product.id }}-{{ block.id }}"
+                name="related_product_{{ block.id }}"
+                value="{{ related_product.url }}"
+                onchange="window.location.href=this.value;"
+                data-product-id="{{ product.id }}" 
+                data-image-url="{{ variant_image_url }}"
+                {% if product.handle == related_product.handle %}
+                  checked="checked"
+                {% endif %}
+                {% if option_disabled %}
+                  class="disabled"
+                {% endif %}
+              >
+              <label for="related_product-{{ related_product.id }}-{{ block.id }}" style="background-image: url('{{ variant_image_url }}'); width: {{ block.settings.combined_listing_swatch_size }}px; height: {{ block.settings.combined_listing_swatch_size }}px; border-radius: {% if block.settings.combined_listing_swatch_shape_custom == 'circle' %}50%{% else %}0%{% endif %} !important;">
+                <span class="visually-hidden">{{ 'products.product.variant_sold_out_or_unavailable' | t }}</span>
+              </label>
+           </div>
+         {% endfor %}
+      </fieldset>
+      
+    {% endif %}
+    
+  {%- elsif block.settings.picker_type == 'dropdown' -%}
+    <div class="product-form__input product-form__input--dropdown">
+      <label for="ProductSelect-related-{{ section.id }}" class="form__label">{{ block.settings.grouping_label }}</label>
+      <div class="select">
+        <select
+          id="ProductSelect-related-{{ section.id }}-{{ block.id }}"
+          class="select__select"
+          onchange="window.location.href=this.value;"
+        >
+          {% for related_product in related_products %}
+            <option
+              value="{{ related_product.url }}"
+              {% if product.handle == related_product.handle %}
+                selected="selected"
+              {% endif %}
+            >
+              {{ related_product.metafields.custom[block.settings.option_value_metafield_key].value }}
+            </option>
+          {% endfor %}
+        </select>
+        <span class="svg-wrapper">
+          {{- 'icon-caret.svg' | inline_asset_content -}}
+        </span>
+      </div>
+    </div>
+  {%- endif -%}
+{%- endif -%}
